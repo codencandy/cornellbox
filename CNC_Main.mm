@@ -12,8 +12,11 @@ int main()
 
     bool running = true;
 
-    MainWindow* window = CreateMainWindow( &running );
-    
+    MainWindow*    window   = CreateMainWindow( &running );
+    MetalRenderer* renderer = CreateMetalRenderer();
+
+    [window setContentView: renderer->m_view];
+
     while( running )
     {
         @autoreleasepool
@@ -30,6 +33,11 @@ int main()
                 [app updateWindows];
             }
             while( event != NULL );
+
+            [window->m_displayLinkSignal wait];
+
+            // render the next frame
+            Render( renderer );
         }
     }
 

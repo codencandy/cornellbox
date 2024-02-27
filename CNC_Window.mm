@@ -30,6 +30,11 @@
 @end
 
 @interface MainWindow : NSWindow
+{
+    @public
+        NSCondition*     m_displayLinkSignal;
+        CVDisplayLinkRef m_displayLink;
+}
 @end
 
 @implementation MainWindow
@@ -38,6 +43,20 @@
 - (BOOL)windowCanBecomeMain { return true; }
 
 @end
+
+CVReturn DisplayLinkCallback( CVDisplayLinkRef displayLink, 
+                              const CVTimeStamp* inNow, 
+                              const CVTimeStamp* inOutputTime, 
+                              CVOptionFlags  flagsIn, 
+                              CVOptionFlags* flagsOut, 
+                              void* context )
+{
+    MainWindow* window = (MainWindow*)context;
+
+    [window->m_displayLinkSignal signal];
+
+    return kCVReturnSuccess;
+}                              
 
 MainWindow* CreateMainWindow( bool* running )
 {
@@ -52,6 +71,11 @@ MainWindow* CreateMainWindow( bool* running )
     [window makeKeyAndOrderFront: NULL ];
     [window setTitle: @"cornellbox by cnc" ];
     [window setDelegate: delegate ];
+
+    window->m_displayLinkSignal = [NSCondition new];
+    CVDisplayLinkCreateWithActiveCGDisplays( &window->m_displayLink );
+    CVDisplayLinkSetOutputCallback( window->m_displayLink, &DisplayLinkCallback, (void*)window );
+    CVDisplayLinkStart( window->m_displayLink );
 
     return window;
 }

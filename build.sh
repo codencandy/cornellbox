@@ -1,12 +1,13 @@
 #! bin/bash
 
-FRAMEWORKS='-framework AppKit'
+FRAMEWORKS='-framework AppKit -framework CoreVideo -framework Metal -framework MetalKit'
 FLAGS='-std=c++20 --debug'
 TIMEFORMAT=%R
+IGNORE='-Wno-nullability-completeness'
 
 platform()
 {
-    clang++ ${FRAMEWORKS} CNC_Main.mm -o cornellbox ${FLAGS}
+    clang++ ${FRAMEWORKS} CNC_Main.mm -o cornellbox ${FLAGS} ${IGNORE}
 }
 
 main()
