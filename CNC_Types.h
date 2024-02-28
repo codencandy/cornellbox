@@ -28,7 +28,15 @@ struct VertexInput
 
 struct UniformData
 {
-    m4 m_projection;
+    m4 m_viewMatrix;
+    m4 m_projectionMatrix;
+    v2 m_screenSize;
+};
+
+struct Camera
+{
+    v3 m_position;
+    v3 m_direction;
 };
 
 #endif//CNC_TYPES_H
