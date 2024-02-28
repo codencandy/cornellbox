@@ -18,6 +18,7 @@ void checkError( NSError* error )
         id<MTLDevice>              m_device;
         id<MTLCommandQueue>        m_queue;
         id<MTLRenderPipelineState> m_pipelineState;
+        id<MTLBuffer>              m_uniformBuffer;
 }
 
 - (void)setup;

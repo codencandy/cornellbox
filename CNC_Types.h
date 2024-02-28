@@ -26,4 +26,9 @@ struct VertexInput
     v2 m_uv;
 };
 
+struct UniformData
+{
+    m4 m_projection;
+};
+
 #endif//CNC_TYPES_H
