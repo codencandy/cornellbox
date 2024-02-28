@@ -38,6 +38,8 @@ void checkError( NSError* error )
         id<MTLCommandBuffer> commandBuffer = [m_queue commandBuffer];
         id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor: [m_view currentRenderPassDescriptor]];
 
+        [commandEncoder setRenderPipelineState: m_pipelineState];
+
         [commandEncoder endEncoding];
         [commandBuffer presentDrawable: [m_view currentDrawable]];
         [commandBuffer commit];
@@ -62,9 +64,23 @@ void checkError( NSError* error )
         if( vertexShader   == NULL ) NSLog( @"could not load vertex shader" );
         if( fragmentShader == NULL ) NSLog( @"could not load fragment shader " );
 
+        MTLVertexDescriptor* vertexDesc = [MTLVertexDescriptor new];
+        vertexDesc.attributes[0].bufferIndex = 0;
+        vertexDesc.attributes[0].format      = MTLVertexFormatFloat3;
+        vertexDesc.attributes[0].offset      = offsetof( struct VertexInput, m_position );
+        
+        vertexDesc.attributes[1].bufferIndex = 0;
+        vertexDesc.attributes[1].format      = MTLVertexFormatFloat2;
+        vertexDesc.attributes[1].offset      = offsetof( struct VertexInput, m_uv );
+
+        vertexDesc.layouts[0].stride         = sizeof( struct VertexInput );
+        vertexDesc.layouts[0].stepFunction   = MTLVertexStepFunctionPerVertex;
+
         MTLRenderPipelineDescriptor* renderDesc = [MTLRenderPipelineDescriptor new];
-        renderDesc.vertexFunction   = vertexShader;
-        renderDesc.fragmentFunction = fragmentShader;
+        renderDesc.vertexFunction                  = vertexShader;
+        renderDesc.fragmentFunction                = fragmentShader;
+        renderDesc.vertexDescriptor                = vertexDesc;
+        renderDesc.colorAttachments[0].pixelFormat = [m_view colorPixelFormat];
 
         m_pipelineState = [m_device newRenderPipelineStateWithDescriptor: renderDesc error: &error];
         checkError( error );

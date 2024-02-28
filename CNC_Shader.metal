@@ -17,11 +17,12 @@ struct VertexOutput
 vertex VertexOutput VertexShader( VertexInput in [[stage_in]] )
 {
     VertexOutput out;
+    out.m_position = float4( in.m_position, 1.0 );
     return out;
 }
 
 fragment float4 FragmentShader( VertexOutput in [[stage_in]] )
 {
-    float4 color;
+    float4 color = { 1.0, 0.0, 0.0, 1.0 };
     return color;
 }
