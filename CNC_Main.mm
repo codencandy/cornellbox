@@ -8,6 +8,8 @@
 #include "CNC_Types.h"
 #include "CNC_Window.mm"
 #include "CNC_Renderer.mm"
+
+#include "CNC_Application.h"
 #include "CNC_Application.cpp"
 
 int main()
@@ -49,6 +51,10 @@ int main()
     CGFloat framebufferScale = renderer->m_view.window.screen.backingScaleFactor ?: NSScreen.mainScreen.backingScaleFactor;
     io.DisplayFramebufferScale = ImVec2(framebufferScale, framebufferScale);
 
+    struct Application cornellApp = {0};
+
+    Load( &cornellApp );
+
     while( running )
     {
         @autoreleasepool
@@ -67,6 +73,9 @@ int main()
             while( event != NULL );
 
             [window->m_displayLinkSignal wait];
+
+            Update( &cornellApp );
+            Render( &cornellApp );
 
             // Start the Dear ImGui frame
             ImGui_ImplMetal_NewFrame( [renderer->m_view currentRenderPassDescriptor] );
@@ -90,6 +99,8 @@ int main()
             Render( renderer );
         }
     }
+
+    Exit( &cornellApp );
 
     return 0;
 }

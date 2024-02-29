@@ -39,4 +39,9 @@ struct Camera
     v3 m_direction;
 };
 
+struct Box
+{
+    VertexInput m_vertices[8];
+};
+
 #endif//CNC_TYPES_H

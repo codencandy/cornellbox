@@ -6,6 +6,7 @@
 struct Application
 {
     Camera m_camera;
+    Box    m_cornellBox;
 };
 
 void Load( Application* application );
