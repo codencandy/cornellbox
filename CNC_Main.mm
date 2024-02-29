@@ -86,7 +86,6 @@ int main()
                 }
             }
 
-
             // render the next frame
             Render( renderer );
         }

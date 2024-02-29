@@ -4,10 +4,11 @@ FRAMEWORKS='-framework AppKit -framework CoreVideo -framework Metal -framework M
 FLAGS='-std=c++20 --debug -Ilibs/imgui -Ilibs/imgui/backends' 
 TIMEFORMAT=%R
 IGNORE='-Wno-nullability-completeness -Wno-unused-command-line-argument'
-BUILDTYPE=%1
+BUILD_TYPE=$1
 
 all()
 {
+    rm -rf CNC_ImGui.o
     clang++ ${FRAMEWORKS} -c CNC_ImGui.mm ${FLAGS} ${IGNORE}
     platform
 }
@@ -21,12 +22,14 @@ main()
 {
     if [ "$BUILD_TYPE" = "ALL" ]
     then
+        echo "complete build with imgui"
         time all
     else
+        echo "only platform build"
         time platform
     fi
     
-    CODE_SIZE=$(cloc --exclude-dir=libs . | grep -o -E '([0-9]+)' | tail -1)
+    CODE_SIZE=$(cloc --exclude-list-file=.clocignore . | grep -o -E '([0-9]+)' | tail -1)
     echo "-> LINES OF CODE: " $CODE_SIZE
 }
 
