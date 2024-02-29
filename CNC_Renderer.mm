@@ -2,6 +2,7 @@
 #include <MetalKit/MetalKit.h>
 
 #include "CNC_Types.h"
+#include "imgui.h"
 
 void checkError( NSError* error )
 {
@@ -40,6 +41,9 @@ void checkError( NSError* error )
         id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor: [m_view currentRenderPassDescriptor]];
 
         [commandEncoder setRenderPipelineState: m_pipelineState];
+
+        ImGui::Render();
+        ImGui_ImplMetal_RenderDrawData( ImGui::GetDrawData(), commandBuffer, commandEncoder);
 
         [commandEncoder endEncoding];
         [commandBuffer presentDrawable: [m_view currentDrawable]];
@@ -85,6 +89,8 @@ void checkError( NSError* error )
 
         m_pipelineState = [m_device newRenderPipelineStateWithDescriptor: renderDesc error: &error];
         checkError( error );
+
+        m_uniformBuffer = [m_device newBufferWithLength: sizeof( struct UniformData )options: MTLResourceCPUCacheModeDefaultCache];
     }    
 }
 
