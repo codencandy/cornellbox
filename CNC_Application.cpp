@@ -1,4 +1,6 @@
 #include "CNC_Application.h"
+#include <stdlib.h>
+#include <string.h>
 
 void Load( Application* application )
 {
@@ -37,6 +39,61 @@ void Load( Application* application )
     application->m_cornellBox.m_vertices[5].m_position = P6;
     application->m_cornellBox.m_vertices[6].m_position = P7;
     application->m_cornellBox.m_vertices[7].m_position = P8;
+
+    // construct the list of indices
+    /*
+        P4 ---- P3
+        |       | 
+        |       | 
+        P1 ---- P2
+     */
+    u32 indices[36] = { 
+        0, 1, 2, 2, 3, 0,
+    
+    /*
+          P5 ---- P6
+         /       /
+        P1 ---- P2
+     */
+        0, 4, 1, 1, 5, 4,
+
+    /*
+          P8 ---- P7
+          |       |
+          |       | 
+          P5 ---- P6
+     */
+        4, 7, 5, 5, 6, 7,
+
+    /*
+          P8 ---- P7
+         /        /
+        P4 ---- P3 
+     */
+        3, 2, 6, 6, 7, 3,
+
+    /*
+          P8
+         / | 
+        P4 |
+        | P5
+        |/ 
+        P1 
+     */
+        4, 0, 3, 3, 7, 4,
+
+    /*
+           P7
+          /|
+        P3 | 
+           P6
+        | /
+        P2
+     */
+        1, 5, 6, 6, 2, 1,
+    };
+
+    memcpy( application->m_cornellBox.m_indices, &indices, sizeof( u32 ) * 36 );
 }
 
 void Update( Application* application )

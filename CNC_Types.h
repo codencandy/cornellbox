@@ -42,6 +42,7 @@ struct Camera
 struct Box
 {
     VertexInput m_vertices[8];
+    u32         m_indices[36]; // 6 sides with 6 vertices each
 };
 
 #endif//CNC_TYPES_H
