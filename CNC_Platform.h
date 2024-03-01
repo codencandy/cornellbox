@@ -5,7 +5,10 @@
 
 struct Platform
 {
-
+    void (*submitDrawCall)( void*, DrawCall* );
 };
+
+// services the platform provides to the application
+void SubmitDrawCall( void* renderer, DrawCall* call );
 
 #endif//CNC_PLATFORM_H

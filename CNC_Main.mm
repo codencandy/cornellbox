@@ -9,6 +9,9 @@
 #include "CNC_Window.mm"
 #include "CNC_Renderer.mm"
 
+#include "CNC_Memory.h"
+#include "CNC_Memory.cpp"
+
 #include "CNC_Application.h"
 #include "CNC_Application.cpp"
 
@@ -52,6 +55,7 @@ int main()
     io.DisplayFramebufferScale = ImVec2(framebufferScale, framebufferScale);
 
     struct Application cornellApp = {0};
+    cornellApp.m_renderer = (void*)renderer;
 
     Load( &cornellApp );
 

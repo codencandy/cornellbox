@@ -1,5 +1,4 @@
 #include "CNC_Application.h"
-#include <stdlib.h>
 #include <string.h>
 
 void Load( Application* application )
@@ -94,6 +93,9 @@ void Load( Application* application )
     };
 
     memcpy( application->m_cornellBox.m_indices, &indices, sizeof( u32 ) * 36 );
+
+    application->m_permanentPool = CreateMemoryPool( MEGABYTES(10) );
+    application->m_transientPool = CreateMemoryPool( MEGABYTES(10) );
 }
 
 void Update( Application* application )

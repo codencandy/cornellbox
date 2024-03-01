@@ -45,4 +45,12 @@ struct Box
     u32         m_indices[36]; // 6 sides with 6 vertices each
 };
 
+struct DrawCall
+{
+    VertexInput* m_vertices;
+    u32*         m_indices;
+    u32          m_numVertices;
+    u32          m_numIndices;
+};
+
 #endif//CNC_TYPES_H

@@ -19,7 +19,13 @@ void checkError( NSError* error )
         id<MTLDevice>              m_device;
         id<MTLCommandQueue>        m_queue;
         id<MTLRenderPipelineState> m_pipelineState;
+
+        id<MTLBuffer>              m_vertexBuffer;
+        id<MTLBuffer>              m_indexBuffer;
         id<MTLBuffer>              m_uniformBuffer;
+
+        u32                        m_numVertices;
+        u32                        m_numIndices;
 }
 
 - (void)setup;
@@ -42,6 +48,8 @@ void checkError( NSError* error )
 
         [commandEncoder setRenderPipelineState: m_pipelineState];
 
+        
+        // render the ui on top of the scene
         ImGui::Render();
         ImGui_ImplMetal_RenderDrawData( ImGui::GetDrawData(), commandBuffer, commandEncoder);
 
@@ -90,7 +98,9 @@ void checkError( NSError* error )
         m_pipelineState = [m_device newRenderPipelineStateWithDescriptor: renderDesc error: &error];
         checkError( error );
 
-        m_uniformBuffer = [m_device newBufferWithLength: sizeof( struct UniformData )options: MTLResourceCPUCacheModeDefaultCache];
+        m_vertexBuffer  = [m_device newBufferWithLength: sizeof( struct VertexInput ) * 8 options: MTLResourceCPUCacheModeDefaultCache];
+        m_uniformBuffer = [m_device newBufferWithLength: sizeof( struct UniformData )     options: MTLResourceCPUCacheModeDefaultCache];
+        m_indexBuffer   = [m_device newBufferWithLength: sizeof( u32 ) * 36               options: MTLResourceCPUCacheModeDefaultCache];
     }    
 }
 
@@ -119,4 +129,15 @@ MetalRenderer* CreateMetalRenderer()
 void Render( MetalRenderer* renderer )
 {
     [renderer->m_view draw];
+}
+
+void SubmitDrawCall( void* renderer, DrawCall* call )
+{
+    MetalRenderer* metalRenderer = (MetalRenderer*)renderer;
+
+    memcpy( [metalRenderer->m_vertexBuffer contents], call->m_vertices, call->m_numVertices * sizeof( struct VertexInput ) );
+    memcpy( [metalRenderer->m_indexBuffer contents],  call->m_indices,  call->m_numIndices  * sizeof( u32) );
+
+    metalRenderer->m_numVertices = call->m_numVertices;
+    metalRenderer->m_numIndices  = call->m_numIndices;
 }

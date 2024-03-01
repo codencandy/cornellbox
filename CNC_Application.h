@@ -2,11 +2,16 @@
 #define CNC_APPLICATION_H
 
 #include "CNC_Types.h"
+#include "CNC_Memory.h"
 
 struct Application
 {
-    Camera m_camera;
-    Box    m_cornellBox;
+    MemoryPool* m_permanentPool;
+    MemoryPool* m_transientPool;
+    
+    void*       m_renderer;
+    Camera      m_camera;
+    Box         m_cornellBox;
 };
 
 void Load( Application* application );
