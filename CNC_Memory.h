@@ -14,6 +14,9 @@ struct MemoryPool
 };
 
 struct MemoryPool* CreateMemoryPool( u32 sizeInBytes );
+void               ClearMemoryPool( MemoryPool* pool );
 void*              AllocateStruct( u32 sizeInBytes, struct MemoryPool* pool );
+
+#define AllocStruct( x, pool ) (x*)AllocateStruct( sizeof( x ), pool );
 
 #endif//CNC_MEMORY_H

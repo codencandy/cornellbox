@@ -14,6 +14,11 @@ struct MemoryPool* CreateMemoryPool( u32 sizeInBytes )
     return pool;
 }
 
+void ClearMemoryPool( MemoryPool* pool )
+{
+    pool->m_used = 0;
+}
+
 void* AllocateStruct( u32 size, struct MemoryPool* pool )
 {   
     assert( pool->m_size - pool->m_used >= size );

@@ -47,7 +47,16 @@ void checkError( NSError* error )
         id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor: [m_view currentRenderPassDescriptor]];
 
         [commandEncoder setRenderPipelineState: m_pipelineState];
+        [commandEncoder setVertexBuffer: m_vertexBuffer offset: 0 atIndex: 0]; // vertices
+        [commandEncoder setVertexBuffer: m_uniformBuffer offset:0 atIndex: 1]; // uniforms (projection)
+        [commandEncoder drawIndexedPrimitives: MTLPrimitiveTypeTriangle
+                                   indexCount: m_numIndices
+                                    indexType: MTLIndexTypeUInt32
+                                  indexBuffer: m_indexBuffer
+                            indexBufferOffset: 0
+                                instanceCount:1];
 
+        // render the draw calls
         
         // render the ui on top of the scene
         ImGui::Render();

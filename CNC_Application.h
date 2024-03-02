@@ -3,6 +3,7 @@
 
 #include "CNC_Types.h"
 #include "CNC_Memory.h"
+#include "CNC_Platform.h"
 
 struct Application
 {
@@ -12,6 +13,8 @@ struct Application
     void*       m_renderer;
     Camera      m_camera;
     Box         m_cornellBox;
+
+    Platform*   m_platform;
 };
 
 void Load( Application* application );

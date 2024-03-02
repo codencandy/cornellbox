@@ -100,12 +100,19 @@ void Load( Application* application )
 
 void Update( Application* application )
 {
-
+   ClearMemoryPool( application->m_transientPool );
 }
 
 void Render( Application* application )
 {
+   DrawCall* call = AllocStruct( DrawCall, application->m_transientPool );
 
+   call->m_numIndices  = 36;
+   call->m_numVertices = 8;
+   call->m_vertices    = application->m_cornellBox.m_vertices;
+   call->m_indices     = application->m_cornellBox.m_indices;
+
+   application->m_platform->submitDrawCall( application->m_renderer, call );
 }
 
 void Exit( Application* application )

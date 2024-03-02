@@ -54,8 +54,12 @@ int main()
     CGFloat framebufferScale = renderer->m_view.window.screen.backingScaleFactor ?: NSScreen.mainScreen.backingScaleFactor;
     io.DisplayFramebufferScale = ImVec2(framebufferScale, framebufferScale);
 
+    struct Platform macos = {0};
+    macos.submitDrawCall = SubmitDrawCall;
+    
     struct Application cornellApp = {0};
     cornellApp.m_renderer = (void*)renderer;
+    cornellApp.m_platform = &macos;
 
     Load( &cornellApp );
 

@@ -21,11 +21,12 @@ struct UniformData
     float2   m_screenSize;
 };
 
-vertex VertexOutput VertexShader( VertexInput in [[stage_in]],
-                                  constant UniformData& uniform [[buffer(1)]] )
+vertex VertexOutput VertexShader( const device VertexInput* in      [[buffer(0)]],
+                                  constant     UniformData& uniform [[buffer(1)]],
+                                  uint vertexId [[vertex_id]] )
 {
     VertexOutput out;
-    out.m_position = uniform.m_projectionMatrix * uniform.m_viewMatrix * float4( in.m_position, 1.0 );
+    out.m_position = uniform.m_projectionMatrix * uniform.m_viewMatrix * float4( in[vertexId].m_position, 1.0 );
     return out;
 }
 
