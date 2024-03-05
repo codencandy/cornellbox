@@ -20,6 +20,7 @@ void checkError( NSError* error )
         id<MTLCommandQueue>        m_queue;
         id<MTLRenderPipelineState> m_pipelineState;
 
+        struct UniformData         m_uniform;
         id<MTLBuffer>              m_vertexBuffer;
         id<MTLBuffer>              m_indexBuffer;
         id<MTLBuffer>              m_uniformBuffer;
@@ -109,7 +110,7 @@ void checkError( NSError* error )
 
         m_vertexBuffer  = [m_device newBufferWithLength: sizeof( struct VertexInput ) * 8 options: MTLResourceCPUCacheModeDefaultCache];
         m_uniformBuffer = [m_device newBufferWithLength: sizeof( struct UniformData )     options: MTLResourceCPUCacheModeDefaultCache];
-        m_indexBuffer   = [m_device newBufferWithLength: sizeof( u32 ) * 36               options: MTLResourceCPUCacheModeDefaultCache];
+        m_indexBuffer   = [m_device newBufferWithLength: sizeof( u32 ) * 6                options: MTLResourceCPUCacheModeDefaultCache];
     }    
 }
 
@@ -119,7 +120,7 @@ MetalRenderer* CreateMetalRenderer()
 {
     MetalRenderer* renderer = [MetalRenderer new];
 
-    CGRect contentRect = CGRectMake( 0, 0, 800, 500 );
+    CGRect contentRect = CGRectMake( 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT );
     renderer->m_device = MTLCreateSystemDefaultDevice();
     renderer->m_view   = [[MTKView alloc] initWithFrame: contentRect device: renderer->m_device];
     
@@ -149,4 +150,13 @@ void SubmitDrawCall( void* renderer, DrawCall* call )
 
     metalRenderer->m_numVertices = call->m_numVertices;
     metalRenderer->m_numIndices  = call->m_numIndices;
+}
+
+void SetProjectionMatrix( void* renderer, m4 projectionMatrix )
+{
+    MetalRenderer* metalRenderer = (MetalRenderer*)renderer;
+
+    metalRenderer->m_uniform.m_projectionMatrix = projectionMatrix;
+
+    memcpy( [metalRenderer->m_uniformBuffer contents], &metalRenderer->m_uniform, sizeof( struct UniformData ) );   
 }

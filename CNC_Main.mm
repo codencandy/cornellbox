@@ -56,6 +56,7 @@ int main()
 
     struct Platform macos = {0};
     macos.submitDrawCall = SubmitDrawCall;
+    macos.setProjectionMatrix = SetProjectionMatrix;
     
     struct Application cornellApp = {0};
     cornellApp.m_renderer = (void*)renderer;

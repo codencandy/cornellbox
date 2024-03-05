@@ -17,7 +17,6 @@ struct VertexOutput
 struct UniformData
 {
     float4x4 m_projectionMatrix;
-    float4x4 m_viewMatrix;
     float2   m_screenSize;
 };
 
@@ -26,7 +25,9 @@ vertex VertexOutput VertexShader( const device VertexInput* in      [[buffer(0)]
                                   uint vertexId [[vertex_id]] )
 {
     VertexOutput out;
-    out.m_position = uniform.m_projectionMatrix * uniform.m_viewMatrix * float4( in[vertexId].m_position, 1.0 );
+    float4 inPos = float4( in[vertexId].m_position, 1.0 );
+    out.m_position = uniform.m_projectionMatrix * inPos;
+    
     return out;
 }
 

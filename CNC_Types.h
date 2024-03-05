@@ -1,6 +1,9 @@
 #ifndef CNC_TYPES_H
 #define CNC_TYPES_H
 
+#define WINDOW_WIDTH  800
+#define WINDOW_HEIGHT 500
+
 #include <simd/simd.h>
 
 typedef unsigned int   u32;
@@ -16,6 +19,7 @@ typedef double         f64;
 
 typedef simd_float2     v2;
 typedef simd_float3     v3;
+typedef simd_float4     v4;
 
 typedef simd_float3x3   m3;
 typedef simd_float4x4   m4;
@@ -28,7 +32,6 @@ struct VertexInput
 
 struct UniformData
 {
-    m4 m_viewMatrix;
     m4 m_projectionMatrix;
     v2 m_screenSize;
 };
