@@ -15,6 +15,9 @@
 #include "CNC_Application.h"
 #include "CNC_Application.cpp"
 
+#include "CNC_Userinterface.h"
+#include "CNC_Userinterface.cpp"
+
 int main()
 {
     NSApplication* app = [NSApplication sharedApplication];
@@ -55,7 +58,7 @@ int main()
     io.DisplayFramebufferScale = ImVec2(framebufferScale, framebufferScale);
 
     struct Platform macos = {0};
-    macos.submitDrawCall = SubmitDrawCall;
+    macos.submitDrawCall      = SubmitDrawCall;
     macos.setProjectionMatrix = SetProjectionMatrix;
     
     struct Application cornellApp = {0};
@@ -91,16 +94,20 @@ int main()
             ImGui_ImplOSX_NewFrame( renderer->m_view );
             ImGui::NewFrame();            
 
-            static bool show_demo_window = true;
-            if( show_demo_window )
+            static bool showCornellboxUi = true;
+            if( showCornellboxUi )
             {
-                ImGui::ShowDemoWindow( &show_demo_window );
+                ShowCornellboxUi( &showCornellboxUi, &cornellApp );
+                
+
+
+                //ImGui::ShowDemoWindow( &show_demo_window );
             }
             else
             {
                 if( io.KeysDown[ImGuiKey_F1] )
                 {
-                    show_demo_window = true;
+                    showCornellboxUi = true;
                 }
             }
 
