@@ -9,31 +9,29 @@ m4 CreateProjectionMatrix( f32 n   /* near */,
                            f32 fov /* field of view angle in degrees */)
 {
 
-   f32 rad = (M_PI / 180.0f ) * fov;
-   f32 asp = w/h;
-   f32 t   = tanf( rad * 0.5f );
+    f32 rad = (M_PI / 180.0f ) * fov;
+    f32 asp = w/h;
+    f32 t   = tanf( rad * 0.5f );   
+    f32 m1 = f + n;
+    f32 m2 = -(n*f);    
+    v4 row1 = {   n,   0.0,   0.0,   0.0 }; // -> n*x
+    v4 row2 = { 0.0,     n,   0.0,   0.0 }; // -> n*y
+    v4 row3 = { 0.0,   0.0,    m1,    m2 }; // -> z^2 
+    v4 row4 = { 0.0,   0.0,   1.0,   0.0 }; // -> w = z
 
-   f32 m1 = f + n;
-   f32 m2 = -(n*f);
-
-   v4 row1 = {   n,   0.0,   0.0,   0.0 }; // -> n*x
-   v4 row2 = { 0.0,     n,   0.0,   0.0 }; // -> n*y
-   v4 row3 = { 0.0,   0.0,    m1,    m2 }; // -> z^2 
-   v4 row4 = { 0.0,   0.0,   1.0,   0.0 }; // -> w = z
-
-   // after this matrix is multiplied each elements gets divided by w
-   // x' = (n*x) / w
-   // y' = (n*y) / w
-   // z' = z^2   / w  with w=z => z' = z^2 / z = z ( this just preserves the original z value)
-   // w  = z
-   return simd_matrix_from_rows( row1, row2, row3, row4 );
+    // after this matrix is multiplied each elements gets divided by w
+    // x' = (n*x) / w
+    // y' = (n*y) / w
+    // z' = z^2   / w  with w=z => z' = z^2 / z = z ( this just preserves the original z value)
+    // w  = z
+    return simd_matrix_from_rows( row1, row2, row3, row4 );
 }
 
 void Load( Application* application )
 {
     // construct a box => 8 corners
-    f32 left   = -10.0f;
-    f32 right  =  10.0f;
+    f32 left   =  -5.0f;
+    f32 right  =   5.0f;
     f32 bottom =   0.0f;
     f32 top    =  10.0f;
     f32 far    =  10.0f;
@@ -74,16 +72,7 @@ void Load( Application* application )
         |       | 
         P1 ---- P2
      */
-    u32 indices[12] = { 
-        //0, 1, 2, 2, 3, 0,
-    
-    /*
-          P5 ---- P6
-         /       /
-        P1 ---- P2
-     */
-         //0, 1, 5, 5, 4, 0,
-
+    u32 indices[6] = { 
     /*
           P8 ---- P7
           |       |
@@ -92,32 +81,6 @@ void Load( Application* application )
      */
          4, 5, 6, 6, 7, 4,
 
-    /*
-          P8 ---- P7
-         /        /
-        P4 ---- P3 
-     */
-        //3, 2, 6, 6, 7, 3,
-
-    /*
-          P8
-         / | 
-        P4 |
-        | P5
-        |/ 
-        P1 
-     */
-        //4, 0, 3, 3, 7, 4,
-
-    /*
-           P7
-          /|
-        P3 | 
-           P6
-        | /
-        P2
-     */
-        //1, 5, 6, 6, 2, 1,
     };
 
     memcpy( application->m_cornellBox.m_indices, &indices, sizeof( u32 ) * 6 );
@@ -125,25 +88,32 @@ void Load( Application* application )
     application->m_permanentPool = CreateMemoryPool( MEGABYTES(10) );
     application->m_transientPool = CreateMemoryPool( MEGABYTES(10) );
 
-    m4 projectionMatrix = CreateProjectionMatrix( 0.1f, 10.0f, WINDOW_WIDTH, WINDOW_HEIGHT, 60.0f );
-    application->m_platform->setProjectionMatrix( application->m_renderer, projectionMatrix );
+    Camera* camera = &application->m_camera;
+    camera->m_far  = 20.0f;
+    camera->m_near = 0.1f;
+    camera->m_fov  = 60.0f;
 }
 
 void Update( Application* application )
 {
-   ClearMemoryPool( application->m_transientPool );
+    ClearMemoryPool( application->m_transientPool );
+
+    Camera* camera = &application->m_camera;
+
+    m4 projectionMatrix = CreateProjectionMatrix( camera->m_near, camera->m_far, WINDOW_WIDTH, WINDOW_HEIGHT, camera->m_fov );
+    application->m_platform->setProjectionMatrix( application->m_renderer, projectionMatrix );
 }
 
 void Render( Application* application )
 {
-   DrawCall* call = AllocStruct( DrawCall, application->m_transientPool );
+    DrawCall* call = AllocStruct( DrawCall, application->m_transientPool );
 
-   call->m_numIndices  = 6;
-   call->m_numVertices = 8;
-   call->m_vertices    = application->m_cornellBox.m_vertices;
-   call->m_indices     = application->m_cornellBox.m_indices;
+    call->m_numIndices  = 6;
+    call->m_numVertices = 8;
+    call->m_vertices    = application->m_cornellBox.m_vertices;
+    call->m_indices     = application->m_cornellBox.m_indices;
 
-   application->m_platform->submitDrawCall( application->m_renderer, call );
+    application->m_platform->submitDrawCall( application->m_renderer, call );
 }
 
 void Exit( Application* application )

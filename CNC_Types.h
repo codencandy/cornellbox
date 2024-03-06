@@ -38,8 +38,11 @@ struct UniformData
 
 struct Camera
 {
-    v3 m_position;
-    v3 m_direction;
+    v3  m_position;
+    v3  m_direction;
+    f32 m_near;
+    f32 m_far;
+    f32 m_fov;
 };
 
 struct Box
