@@ -110,7 +110,7 @@ void checkError( NSError* error )
 
         m_vertexBuffer  = [m_device newBufferWithLength: sizeof( struct VertexInput ) * 8 options: MTLResourceCPUCacheModeDefaultCache];
         m_uniformBuffer = [m_device newBufferWithLength: sizeof( struct UniformData )     options: MTLResourceCPUCacheModeDefaultCache];
-        m_indexBuffer   = [m_device newBufferWithLength: sizeof( u32 ) * 6                options: MTLResourceCPUCacheModeDefaultCache];
+        m_indexBuffer   = [m_device newBufferWithLength: sizeof( u32 ) * 12               options: MTLResourceCPUCacheModeDefaultCache];
     }    
 }
 
