@@ -29,6 +29,7 @@ vertex VertexOutput VertexShader( const device VertexInput* in      [[buffer(0)]
     float4 inPos = float4( in[vertexId].m_position, 1.0 );
     out.m_position    = uniform.m_projectionMatrix * inPos;
     out.m_oldPosition = out.m_position;
+    out.m_oldPosition.xyz /= out.m_position.w;
     
     return out;
 }
@@ -37,6 +38,6 @@ fragment float4 FragmentShader( VertexOutput in [[stage_in]] )
 {
     float4 color = { 1.0, 1.0, 1.0, 1.0 };
     float3 pos   = in.m_oldPosition.xyz;
-    color.rgb = color.rgb * (1.0 - length( pos ));
+    color.rgb = 1.0 - (length( pos ) * 0.58);
     return color;
 }

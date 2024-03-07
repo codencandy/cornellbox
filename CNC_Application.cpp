@@ -42,10 +42,10 @@ m4 CreateProjectionMatrix( f32 n   /* near */,
 void Load( Application* application )
 {
     // construct a box => 8 corners
-    f32 left   =  -5.0f;
-    f32 right  =   5.0f;
+    f32 left   =  -7.0f;
+    f32 right  =   7.0f;
     f32 bottom =  -2.0f;
-    f32 top    =  10.0f;
+    f32 top    =   8.0f;
     f32 far    =  10.0f;
     f32 near   =  -5.0f;
 
@@ -78,12 +78,15 @@ void Load( Application* application )
     application->m_cornellBox.m_vertices[7].m_position = P8;
 
     // construct the list of indices
-    u32 indices[12] = { 
-        4, 5, 6, 6, 7, 4,
-        0, 1, 5, 5, 4, 0
+    u32 indices[30] = { 
+        4, 5, 6, 6, 7, 4, // back
+        0, 1, 5, 5, 4, 0, // bottom
+        5, 1, 2, 2, 6, 5, // right
+        0, 4, 7, 7, 3, 1, // left
+        7, 6, 2, 2, 3, 7  // top
     };
 
-    memcpy( application->m_cornellBox.m_indices, &indices, sizeof( u32 ) * 12 );
+    memcpy( application->m_cornellBox.m_indices, &indices, sizeof( u32 ) * 30 );
 
     application->m_permanentPool = CreateMemoryPool( MEGABYTES(10) );
     application->m_transientPool = CreateMemoryPool( MEGABYTES(10) );
@@ -108,7 +111,7 @@ void Render( Application* application )
 {
     DrawCall* call = AllocStruct( DrawCall, application->m_transientPool );
 
-    call->m_numIndices  = 12;
+    call->m_numIndices  = 30;
     call->m_numVertices =  8;
     call->m_vertices    = application->m_cornellBox.m_vertices;
     call->m_indices     = application->m_cornellBox.m_indices;
