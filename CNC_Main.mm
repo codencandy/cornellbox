@@ -5,15 +5,15 @@
 #include <imgui_impl_metal.h>
 #include <imgui_impl_osx.h>
 
+#include "CNC_Application.h"
+#include "CNC_Application.cpp"
+
 #include "CNC_Types.h"
 #include "CNC_Window.mm"
 #include "CNC_Renderer.mm"
 
 #include "CNC_Memory.h"
 #include "CNC_Memory.cpp"
-
-#include "CNC_Application.h"
-#include "CNC_Application.cpp"
 
 #include "CNC_Userinterface.h"
 #include "CNC_Userinterface.cpp"
@@ -99,10 +99,6 @@ int main()
             if( showCornellboxUi )
             {
                 ShowCornellboxUi( &showCornellboxUi, &cornellApp );
-                
-
-
-                //ImGui::ShowDemoWindow( &show_demo_window );
             }
             else
             {
@@ -110,6 +106,11 @@ int main()
                 {
                     showCornellboxUi = true;
                 }
+            }
+
+            if( io.KeysDown[ImGuiKey_Escape] )
+            {
+                running = false;
             }
 
             // render the next frame

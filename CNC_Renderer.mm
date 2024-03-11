@@ -38,7 +38,8 @@ void checkError( NSError* error )
 
 - (void)mtkView:(nonnull MTKView *)view drawableSizeWillChange:(CGSize)size
 {
-
+    m_uniform.m_screenSize.x = size.width;
+    m_uniform.m_screenSize.y = size.height;
 }
 
 - (void)drawInMTKView:(nonnull MTKView *)view
