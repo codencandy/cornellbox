@@ -27,17 +27,23 @@ vertex VertexOutput VertexShader( const device VertexInput* in      [[buffer(0)]
 {
     VertexOutput out;
     float4 inPos = float4( in[vertexId].m_position, 1.0 );
+
     out.m_position    = uniform.m_projectionMatrix * inPos;
-    out.m_oldPosition = out.m_position;
-    out.m_oldPosition.xyz /= out.m_position.w;
+    out.m_oldPosition = inPos;
     
     return out;
 }
 
 fragment float4 FragmentShader( VertexOutput in [[stage_in]] )
 {
-    float4 color = { 1.0, 1.0, 0.0, 1.0 };
+    float3 origin    = {0.0, 0.0, 0.0};
+    float3 pMax      = {10, 10, 10};
+    float  maxLength = distance( pMax, origin );
+
+    float4 color = { 1.0, 1.0, 1.0, 1.0 };
     float3 pos   = in.m_oldPosition.xyz;
-    color.rgb = 1.0 - (length( pos ) * 0.58);
+
+    //pos.xyz /= in.m_oldPosition.w;
+    color.rgb = 1.0 - (length( pos ) / maxLength) * 0.7;
     return color;
 }
