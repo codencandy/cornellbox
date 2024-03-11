@@ -14,15 +14,24 @@ m4 CreateProjectionMatrix( f32 n   /* near */,
                            f32 fov /* field of view angle in degrees */)
 {
 
+    /*
+        the matrix we construct solves the following problems:
+
+        - transform according to the screens aspect ration -> h/w
+        - transform such that the field of view is accounted for
+        - transform such that far and near plane are accounted for
+
+        an excellent explanation about how to construct this matrix can be found here:
+        https://www.youtube.com/watch?v=EqNcqBdrNyI
+
+        IMPORTANT: the so called perspective divide does not happen with this
+                   matrix multiplication. This is done by the hardware directly after
+                   the vertex stage and before the fragment stage
+     */
     f32 rad       = toRadians( fov );         // scaling factor for the fov
     f32 fovFactor = 1.0 / tanf( rad * 0.5f ); // inverted to make closer things bigger and vice versa
 
-    f32 aspect    = h/w;
-
-    f32 m1 = f + n;
-    f32 m2 = -(n*f);  
-
-    f32 a = aspect;
+    f32 a = h/w;
     f32 b = fovFactor;  
     f32 z = f / (f-n);
 
@@ -31,11 +40,6 @@ m4 CreateProjectionMatrix( f32 n   /* near */,
     v4 row3 = { 0.0,   0.0,     z, -(n*z) };  
     v4 row4 = { 0.0,   0.0,   1.0,   0.0  }; 
 
-    // after this matrix is multiplied each elements gets divided by w
-    // x' = (n*x) / w
-    // y' = (n*y) / w
-    // z' = z^2   / w  with w=z => z' = z^2 / z = z ( this just preserves the original z value)
-    // w  = z
     return simd_matrix_from_rows( row1, row2, row3, row4 );
 }
 
