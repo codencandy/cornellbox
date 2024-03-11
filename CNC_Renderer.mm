@@ -30,6 +30,7 @@ void checkError( NSError* error )
 }
 
 - (void)setup;
+- (void)loadShaders;
 
 @end
 
@@ -73,6 +74,18 @@ void checkError( NSError* error )
 {
     @autoreleasepool
     {
+        [self loadShaders];
+
+        m_vertexBuffer  = [m_device newBufferWithLength: sizeof( struct VertexInput ) * 8 options: MTLResourceCPUCacheModeDefaultCache];
+        m_uniformBuffer = [m_device newBufferWithLength: sizeof( struct UniformData )     options: MTLResourceCPUCacheModeDefaultCache];
+        m_indexBuffer   = [m_device newBufferWithLength: sizeof( u32 ) * 30               options: MTLResourceCPUCacheModeDefaultCache];
+    }    
+}
+
+- (void)loadShaders
+{
+    @autoreleasepool
+    {
         NSError* error = NULL;
         NSString* shaderSource = [NSString stringWithContentsOfFile: @"CNC_Shader.metal" encoding: NSUTF8StringEncoding error: &error];
         checkError( error );
@@ -107,11 +120,7 @@ void checkError( NSError* error )
 
         m_pipelineState = [m_device newRenderPipelineStateWithDescriptor: renderDesc error: &error];
         checkError( error );
-
-        m_vertexBuffer  = [m_device newBufferWithLength: sizeof( struct VertexInput ) * 8 options: MTLResourceCPUCacheModeDefaultCache];
-        m_uniformBuffer = [m_device newBufferWithLength: sizeof( struct UniformData )     options: MTLResourceCPUCacheModeDefaultCache];
-        m_indexBuffer   = [m_device newBufferWithLength: sizeof( u32 ) * 30               options: MTLResourceCPUCacheModeDefaultCache];
-    }    
+    }
 }
 
 @end
@@ -159,4 +168,11 @@ void SetProjectionMatrix( void* renderer, m4 projectionMatrix )
     metalRenderer->m_uniform.m_projectionMatrix = projectionMatrix;
 
     memcpy( [metalRenderer->m_uniformBuffer contents], &metalRenderer->m_uniform, sizeof( struct UniformData ) );   
+}
+
+void ReloadShaders( void* renderer )
+{
+    MetalRenderer* metalRenderer = (MetalRenderer*)renderer;
+
+    [metalRenderer loadShaders];
 }

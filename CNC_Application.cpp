@@ -44,10 +44,10 @@ void Load( Application* application )
     // construct a box => 8 corners
     f32 left   =  -7.0f;
     f32 right  =   7.0f;
-    f32 bottom =  -2.0f;
-    f32 top    =   8.0f;
-    f32 far    =  10.0f;
-    f32 near   =  -5.0f;
+    f32 bottom =  -5.0f;
+    f32 top    =   5.0f;
+    f32 far    =   8.0f;
+    f32 near   =  -2.0f;
 
     /*
           P8 ---- P7
@@ -82,7 +82,7 @@ void Load( Application* application )
         4, 5, 6, 6, 7, 4, // back
         0, 1, 5, 5, 4, 0, // bottom
         5, 1, 2, 2, 6, 5, // right
-        0, 4, 7, 7, 3, 1, // left
+        0, 4, 7, 7, 3, 0, // left
         7, 6, 2, 2, 3, 7  // top
     };
 

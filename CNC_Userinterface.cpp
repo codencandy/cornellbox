@@ -19,5 +19,11 @@ void ShowCornellboxUi( bool* showCornellbox, Application* application )
     ImGui::DragFloat( "screen width",  &screenWidth,    0.5f,  0.0f, 1200.0f, "%.3f" );
     ImGui::DragFloat( "screen height", &screenHeight,   0.5f,  0.0f,  800.0f, "%.3f" );
 
+    if( ImGui::Button( "reload" ) )
+    {
+        Platform* platform = application->m_platform;
+        platform->reloadShaders( application->m_renderer );
+    }
+
     ImGui::End();
 }
