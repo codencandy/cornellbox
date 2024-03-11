@@ -44,10 +44,10 @@ void Load( Application* application )
     // construct a box => 8 corners
     f32 left   =  -10.0f;
     f32 right  =   10.0f;
-    f32 bottom =  -10.0f;
-    f32 top    =   10.0f;
+    f32 bottom =   -5.0f;
+    f32 top    =    5.0f;
     f32 far    =   10.0f;
-    f32 near   =  -1.0f;
+    f32 near   =  -10.0f;
 
     /*
           P8 ---- P7
@@ -94,7 +94,7 @@ void Load( Application* application )
     Camera* camera = &application->m_camera;
     camera->m_far  = 20.0f;
     camera->m_near = 0.1f;
-    camera->m_fov  = 60.0f;
+    camera->m_fov  = 85.0f;
 }
 
 void Update( Application* application )

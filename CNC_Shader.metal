@@ -44,6 +44,6 @@ fragment float4 FragmentShader( VertexOutput in [[stage_in]] )
     float3 pos   = in.m_oldPosition.xyz;
 
     //pos.xyz /= in.m_oldPosition.w;
-    color.rgb = 1.0 - (length( pos ) / maxLength) * 0.7;
+    color.rgb = 1.0 - (length( pos ) / maxLength) * 0.8;
     return color;
 }
