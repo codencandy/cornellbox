@@ -7,6 +7,17 @@ f32 toRadians( f32 degrees )
     return (M_PI / 180.0f ) * degrees;
 }
 
+Quarternion toQuarterion( f32 radians, f32 x, f32 y, f32 z )
+{
+    Quarternion q = {};
+    q.m_q1 = cosf( radians * 0.5f );
+    q.m_q2 = x * sinf( radians * 0.5f );
+    q.m_q3 = y * sinf( radians * 0.5f );
+    q.m_q4 = z * sinf( radians * 0.5f );
+
+    return q;
+}
+
 m4 CreateProjectionMatrix( f32 n   /* near */, 
                            f32 f   /* far  */,
                            f32 w   /* screen width */,
