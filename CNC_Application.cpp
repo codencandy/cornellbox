@@ -2,11 +2,6 @@
 #include "CNC_Types.h"
 #include <string.h>
 
-f32 toRadians( f32 degrees )
-{
-    return (M_PI / 180.0f ) * degrees;
-}
-
 Quarternion toQuarterion( f32 radians, f32 x, f32 y, f32 z )
 {
     Quarternion q = {};
@@ -28,6 +23,11 @@ Quarternion toInverse( Quarternion& a )
     q.m_q3 = -a.m_q3;
 
     return q;
+}
+
+Quarternion leftRight( f32 radians )
+{
+    return toQuarterion( radians, 0.0f, 1.0f, 0.0f );
 }
 
 Quarternion operator * ( Quarternion& a, Quarternion& b )
@@ -131,11 +131,14 @@ void Load( Application* application )
     application->m_transientPool = CreateMemoryPool( MEGABYTES(10) );
 
     Camera* camera = &application->m_camera;
-    camera->m_far          = 20.0f;
-    camera->m_near         = 0.1f;
-    camera->m_fov          = 85.0f;
-    camera->m_screenWidth  = WINDOW_WIDTH;
-    camera->m_screenHeight = WINDOW_HEIGHT;
+    camera->m_far               = 20.0f;
+    camera->m_near              = 0.1f;
+    camera->m_fov               = 85.0f;
+    camera->m_screenWidth       = WINDOW_WIDTH;
+    camera->m_screenHeight      = WINDOW_HEIGHT;
+    camera->m_direction         = { 0.0f, 0.0f, 1.0f }; // into the screen along the z axis
+    camera->m_position          = { 0.0f, 0.0f, 0.0f }; // camera at the center of the world
+    camera->m_leftRightRotation = 0.0f;
 }
 
 void Update( Application* application )
@@ -144,8 +147,11 @@ void Update( Application* application )
 
     Camera* camera = &application->m_camera;
 
+    camera->m_rotationQuarternion = leftRight( camera->m_leftRightRotation );
+    camera->m_inverseRotation     = toInverse( camera->m_rotationQuarternion );
+
     m4 projectionMatrix = CreateProjectionMatrix( camera->m_near, camera->m_far, camera->m_screenWidth, camera->m_screenHeight, camera->m_fov );
-    application->m_platform->setProjectionMatrix( application->m_renderer, projectionMatrix );
+    application->m_platform->setCameraData( application->m_renderer, projectionMatrix, camera->m_rotationQuarternion, camera->m_inverseRotation );
 }
 
 void Render( Application* application )

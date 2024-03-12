@@ -58,9 +58,9 @@ int main()
     io.DisplayFramebufferScale = ImVec2(framebufferScale, framebufferScale);
 
     struct Platform macos = {0};
-    macos.submitDrawCall      = SubmitDrawCall;
-    macos.setProjectionMatrix = SetProjectionMatrix;
-    macos.reloadShaders       = ReloadShaders;
+    macos.submitDrawCall  = SubmitDrawCall;
+    macos.setCameraData   = SetCameraData;
+    macos.reloadShaders   = ReloadShaders;
     
     struct Application cornellApp = {0};
     cornellApp.m_renderer = (void*)renderer;

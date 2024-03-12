@@ -6,12 +6,12 @@
 struct Platform
 {
     void (*submitDrawCall)( void*, DrawCall* );
-    void (*setProjectionMatrix)( void*, m4 );
+    void (*setCameraData)( void*, m4, struct Quarternion, struct Quarternion );
     void (*reloadShaders)( void* );
 };
 
 // services the platform provides to the application
 void SubmitDrawCall( void* renderer, DrawCall* call );
-void SetProjectionMatrix( void* renderer, m4 projectionMatrix );
+void SetCameraData( void* renderer, m4 projectionMatrix, struct Quarternion rotation, struct Quarternion inverse );
 void ReloadShaders( void* renderer );
 #endif//CNC_PLATFORM_H

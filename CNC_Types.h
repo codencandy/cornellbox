@@ -40,8 +40,10 @@ struct VertexInput
 
 struct UniformData
 {
-    m4 m_projectionMatrix;
-    v2 m_screenSize;
+    m4          m_projectionMatrix;
+    Quarternion m_rotationQuarternion;
+    Quarternion m_inverseRotation;
+    v2          m_screenSize;
 };
 
 struct Camera
@@ -50,12 +52,14 @@ struct Camera
     v3          m_direction;
     
     Quarternion m_rotationQuarternion;
+    Quarternion m_inverseRotation;
     
-    f32         m_screenWidth;
-    f32         m_screenHeight;
     f32         m_near;
     f32         m_far;
     f32         m_fov;
+    f32         m_screenWidth;
+    f32         m_screenHeight;
+    f32         m_leftRightRotation;
 };
 
 struct Box
@@ -71,5 +75,15 @@ struct DrawCall
     u32          m_numVertices;
     u32          m_numIndices;
 };
+
+f32 toRadians( f32 degrees )
+{
+    return (M_PI / 180.0f ) * degrees;
+}
+
+f32 toDegrees( f32 radians )
+{
+    return (radians / (M_PI / 180.0f ) );
+}
 
 #endif//CNC_TYPES_H
