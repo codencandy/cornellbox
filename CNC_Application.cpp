@@ -10,12 +10,36 @@ f32 toRadians( f32 degrees )
 Quarternion toQuarterion( f32 radians, f32 x, f32 y, f32 z )
 {
     Quarternion q = {};
-    q.m_q1 = cosf( radians * 0.5f );
-    q.m_q2 = x * sinf( radians * 0.5f );
-    q.m_q3 = y * sinf( radians * 0.5f );
-    q.m_q4 = z * sinf( radians * 0.5f );
+    q.m_q0 = cosf( radians * 0.5f );
+    q.m_q1 = x * sinf( radians * 0.5f );
+    q.m_q2 = y * sinf( radians * 0.5f );
+    q.m_q3 = z * sinf( radians * 0.5f );
 
     return q;
+}
+
+Quarternion toInverse( Quarternion& a )
+{
+    Quarternion q = {};
+
+    q.m_q0 =  a.m_q0;
+    q.m_q1 = -a.m_q1;
+    q.m_q2 = -a.m_q2;
+    q.m_q3 = -a.m_q3;
+
+    return q;
+}
+
+Quarternion operator * ( Quarternion& a, Quarternion& b )
+{
+    Quarternion result = {};
+
+    result.m_q0 = (a.m_q0 * b.m_q0) - (a.m_q1 * b.m_q1) - (a.m_q2 * b.m_q2) - (a.m_q3 * b.m_q3);
+    result.m_q1 = (a.m_q0 * b.m_q1) + (a.m_q1 * b.m_q0) - (a.m_q2 * b.m_q3) + (a.m_q3 * b.m_q2);
+    result.m_q2 = (a.m_q0 * b.m_q2) + (a.m_q1 * b.m_q3) + (a.m_q2 * b.m_q0) - (a.m_q3 * b.m_q1);
+    result.m_q3 = (a.m_q0 * b.m_q3) - (a.m_q1 * b.m_q2) + (a.m_q2 * b.m_q1) + (a.m_q3 * b.m_q0);
+
+    return result;
 }
 
 m4 CreateProjectionMatrix( f32 n   /* near */, 
@@ -107,9 +131,11 @@ void Load( Application* application )
     application->m_transientPool = CreateMemoryPool( MEGABYTES(10) );
 
     Camera* camera = &application->m_camera;
-    camera->m_far  = 20.0f;
-    camera->m_near = 0.1f;
-    camera->m_fov  = 85.0f;
+    camera->m_far          = 20.0f;
+    camera->m_near         = 0.1f;
+    camera->m_fov          = 85.0f;
+    camera->m_screenWidth  = WINDOW_WIDTH;
+    camera->m_screenHeight = WINDOW_HEIGHT;
 }
 
 void Update( Application* application )
@@ -118,7 +144,7 @@ void Update( Application* application )
 
     Camera* camera = &application->m_camera;
 
-    m4 projectionMatrix = CreateProjectionMatrix( camera->m_near, camera->m_far, WINDOW_WIDTH, WINDOW_HEIGHT, camera->m_fov );
+    m4 projectionMatrix = CreateProjectionMatrix( camera->m_near, camera->m_far, camera->m_screenWidth, camera->m_screenHeight, camera->m_fov );
     application->m_platform->setProjectionMatrix( application->m_renderer, projectionMatrix );
 }
 

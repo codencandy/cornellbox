@@ -26,10 +26,10 @@ typedef simd_float4x4   m4;
 
 struct Quarternion
 {
+    f32 m_q0;
     f32 m_q1;
     f32 m_q2;
     f32 m_q3;
-    f32 m_q4;
 };
 
 struct VertexInput
@@ -48,7 +48,11 @@ struct Camera
 {
     v3          m_position;
     v3          m_direction;
+    
     Quarternion m_rotationQuarternion;
+    
+    f32         m_screenWidth;
+    f32         m_screenHeight;
     f32         m_near;
     f32         m_far;
     f32         m_fov;

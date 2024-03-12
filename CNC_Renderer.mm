@@ -80,6 +80,9 @@ void checkError( NSError* error )
         m_vertexBuffer  = [m_device newBufferWithLength: sizeof( struct VertexInput ) * 8 options: MTLResourceCPUCacheModeDefaultCache];
         m_uniformBuffer = [m_device newBufferWithLength: sizeof( struct UniformData )     options: MTLResourceCPUCacheModeDefaultCache];
         m_indexBuffer   = [m_device newBufferWithLength: sizeof( u32 ) * 30               options: MTLResourceCPUCacheModeDefaultCache];
+
+        m_uniform.m_screenSize.x = m_view.frame.size.width;
+        m_uniform.m_screenSize.y = m_view.frame.size.height;
     }    
 }
 

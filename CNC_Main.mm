@@ -87,6 +87,9 @@ int main()
 
             [window->m_displayLinkSignal wait];
 
+            cornellApp.m_camera.m_screenWidth  = renderer->m_uniform.m_screenSize.x;
+            cornellApp.m_camera.m_screenHeight = renderer->m_uniform.m_screenSize.y;
+
             Update( &cornellApp );
             Render( &cornellApp );
 
