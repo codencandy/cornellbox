@@ -41,6 +41,7 @@ struct VertexInput
 struct UniformData
 {
     m4          m_projectionMatrix;
+    m4          m_viewTransform;
     Quarternion m_rotationQuarternion;
     Quarternion m_inverseRotation;
     v2          m_screenSize;

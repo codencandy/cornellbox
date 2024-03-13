@@ -26,6 +26,7 @@ struct Quarternion
 struct UniformData
 {
     float4x4    m_projectionMatrix;
+    float4x4    m_viewTransform;
     Quarternion m_rotationQuarternion;
     Quarternion m_inverseRotation;
     float2      m_screenSize;
@@ -69,6 +70,8 @@ vertex VertexOutput VertexShader( const device VertexInput* in      [[buffer(0)]
     inPos.x = p2.m_q1;
     inPos.y = p2.m_q2;
     inPos.z = p2.m_q3;
+
+    inPos = uniform.m_viewTransform * inPos;
     
     out.m_position    = uniform.m_projectionMatrix * inPos;
     out.m_oldPosition = inPos;

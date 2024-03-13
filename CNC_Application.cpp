@@ -25,6 +25,18 @@ Quarternion toInverse( Quarternion& a )
     return q;
 }
 
+Quarternion multiply( Quarternion& a, Quarternion& b )
+{
+    Quarternion result = {};
+
+    result.m_q0 = (a.m_q0 * b.m_q0) - (a.m_q1 * b.m_q1) - (a.m_q2 * b.m_q2) - (a.m_q3 * b.m_q3);
+    result.m_q1 = (a.m_q0 * b.m_q1) + (a.m_q1 * b.m_q0) - (a.m_q2 * b.m_q3) + (a.m_q3 * b.m_q2);
+    result.m_q2 = (a.m_q0 * b.m_q2) + (a.m_q1 * b.m_q3) + (a.m_q2 * b.m_q0) - (a.m_q3 * b.m_q1);
+    result.m_q3 = (a.m_q0 * b.m_q3) - (a.m_q1 * b.m_q2) + (a.m_q2 * b.m_q1) + (a.m_q3 * b.m_q0);
+
+    return result;
+}
+
 Quarternion cameraRotationQuarternion( f32 roll, f32 pitch, f32 yaw )
 {
     Quarternion q = {};
@@ -90,6 +102,16 @@ m4 CreateProjectionMatrix( f32 n   /* near */,
     v4 row2 = { 0.0,     b,   0.0,   0.0  }; 
     v4 row3 = { 0.0,   0.0,     z, -(n*z) };  
     v4 row4 = { 0.0,   0.0,   1.0,   0.0  }; 
+
+    return simd_matrix_from_rows( row1, row2, row3, row4 );
+}
+
+m4 CreateViewTransform( v3 pos )
+{
+    v4 row1 = { 1.0,   0.0,   0.0,   pos[0]  }; 
+    v4 row2 = { 0.0,   1.0,   0.0,   pos[1]  }; 
+    v4 row3 = { 0.0,   0.0,   1.0,   pos[2]  };  
+    v4 row4 = { 0.0,   0.0,   0.0,   1.0     }; 
 
     return simd_matrix_from_rows( row1, row2, row3, row4 );
 }
@@ -165,12 +187,20 @@ void Update( Application* application )
 
     Camera* camera = &application->m_camera;
 
-    //camera->m_rotationQuarternion = leftRight( camera->m_leftRightRotation );
     camera->m_rotationQuarternion = cameraRotationQuarternion( camera->m_roll, camera->m_pitch, camera->m_yaw );
     camera->m_inverseRotation     = toInverse( camera->m_rotationQuarternion );
 
+    // update the camera direction 
+    v3 dir = camera->m_direction;
+    Quarternion p  = toQuarterion( 0.0f, dir[0], dir[1], dir[2] );
+    Quarternion p1 = multiply( camera->m_inverseRotation, p );
+    Quarternion p2 = multiply( p1, camera->m_rotationQuarternion );
+    
+    camera->m_direction = { p2.m_q1, p2.m_q2, p2.m_q3 };
+    
     m4 projectionMatrix = CreateProjectionMatrix( camera->m_near, camera->m_far, camera->m_screenWidth, camera->m_screenHeight, camera->m_fov );
-    application->m_platform->setCameraData( application->m_renderer, projectionMatrix, camera->m_rotationQuarternion, camera->m_inverseRotation );
+    m4 viewTransform    = CreateViewTransform( camera->m_position );
+    application->m_platform->setCameraData( application->m_renderer, projectionMatrix, viewTransform, camera->m_rotationQuarternion, camera->m_inverseRotation );
 }
 
 void Render( Application* application )
