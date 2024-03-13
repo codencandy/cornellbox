@@ -25,6 +25,22 @@ Quarternion toInverse( Quarternion& a )
     return q;
 }
 
+Quarternion cameraRotationQuarternion( f32 roll, f32 pitch, f32 yaw )
+{
+    Quarternion q = {};
+
+    f32 r = pitch  * 0.5f;
+    f32 p = yaw    * 0.5f;
+    f32 y = roll   * 0.5f;
+
+    q.m_q0 = (cos(r)*cos(p)*cos(y)) + (sin(r)*sin(p)*sin(y));
+    q.m_q1 = (sin(r)*cos(p)*cos(y)) - (cos(r)*sin(p)*sin(y));
+    q.m_q2 = (cos(r)*sin(p)*cos(y)) + (sin(r)*cos(p)*sin(y));
+    q.m_q3 = (cos(r)*cos(p)*sin(y)) - (sin(r)*sin(p)*cos(y));
+
+    return q;
+}
+
 Quarternion leftRight( f32 radians )
 {
     return toQuarterion( radians, 0.0f, 1.0f, 0.0f );
@@ -138,7 +154,9 @@ void Load( Application* application )
     camera->m_screenHeight      = WINDOW_HEIGHT;
     camera->m_direction         = { 0.0f, 0.0f, 1.0f }; // into the screen along the z axis
     camera->m_position          = { 0.0f, 0.0f, 0.0f }; // camera at the center of the world
-    camera->m_leftRightRotation = 0.0f;
+    camera->m_roll              = 0.0f;
+    camera->m_pitch             = 0.0f;
+    camera->m_yaw               = 0.0f;
 }
 
 void Update( Application* application )
@@ -147,7 +165,8 @@ void Update( Application* application )
 
     Camera* camera = &application->m_camera;
 
-    camera->m_rotationQuarternion = leftRight( camera->m_leftRightRotation );
+    //camera->m_rotationQuarternion = leftRight( camera->m_leftRightRotation );
+    camera->m_rotationQuarternion = cameraRotationQuarternion( camera->m_roll, camera->m_pitch, camera->m_yaw );
     camera->m_inverseRotation     = toInverse( camera->m_rotationQuarternion );
 
     m4 projectionMatrix = CreateProjectionMatrix( camera->m_near, camera->m_far, camera->m_screenWidth, camera->m_screenHeight, camera->m_fov );
