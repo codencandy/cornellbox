@@ -60,6 +60,10 @@ struct Camera
     f32         m_screenWidth;
     f32         m_screenHeight;
     f32         m_leftRightRotation;
+
+    f32         m_roll;
+    f32         m_pitch;
+    f32         m_yaw;
 };
 
 struct Box
