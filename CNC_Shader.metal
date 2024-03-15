@@ -27,6 +27,7 @@ struct UniformData
 {
     float4x4    m_projectionMatrix;
     float4x4    m_viewTransform;
+    float4x4    m_scaleTransform;
     Quarternion m_rotationQuarternion;
     Quarternion m_inverseRotation;
     float2      m_screenSize;
@@ -61,6 +62,7 @@ vertex VertexOutput VertexShader( const device VertexInput* in      [[buffer(0)]
 {
     VertexOutput out;
     float4 inPos = float4( in[vertexId].m_position, 1.0 );
+    inPos = inPos * uniform.m_scaleTransform;
 
     // before transforming the vertices rotate them according to the camera
     Quarternion p = { 0.0, inPos.x, inPos.y, inPos.z };

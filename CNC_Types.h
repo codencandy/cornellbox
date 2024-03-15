@@ -42,6 +42,7 @@ struct UniformData
 {
     m4          m_projectionMatrix;
     m4          m_viewTransform;
+    m4          m_scaleTransform;
     Quarternion m_rotationQuarternion;
     Quarternion m_inverseRotation;
     v2          m_screenSize;
@@ -70,6 +71,10 @@ struct Box
 {
     VertexInput m_vertices[8];
     u32         m_indices[36]; // 6 sides with 6 vertices each
+    f32         m_width;
+    f32         m_height;
+    f32         m_length;
+    m4          m_scaleMatrix;
 };
 
 struct DrawCall

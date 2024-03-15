@@ -106,7 +106,7 @@ m4 CreateProjectionMatrix( f32 n   /* near */,
     return simd_matrix_from_rows( row1, row2, row3, row4 );
 }
 
-m4 CreateViewTransform( v3 pos )
+m4 CreateTransformMatrix( v3 pos )
 {
     v4 row1 = { 1.0,   0.0,   0.0,   pos[0]  }; 
     v4 row2 = { 0.0,   1.0,   0.0,   pos[1]  }; 
@@ -116,15 +116,31 @@ m4 CreateViewTransform( v3 pos )
     return simd_matrix_from_rows( row1, row2, row3, row4 );
 }
 
+m4 CreateScaleMatrix( f32 x, f32 y, f32 z )
+{
+    v4 row1 = {   x,   0.0,   0.0,    0.0f  };
+    v4 row2 = { 0.0,     y,   0.0,    0.0f  }; 
+    v4 row3 = { 0.0,   0.0,     z,    0.0f  };  
+    v4 row4 = { 0.0,   0.0,   0.0,    1.0f  }; 
+
+    return simd_matrix_from_rows( row1, row2, row3, row4 );
+}
+
 void Load( Application* application )
 {
+    Box* box = &application->m_cornellBox;
+
+    box->m_width       = 20.0f;
+    box->m_height      = 10.0f;
+    box->m_length      = 20.0f;
+    
     // construct a box => 8 corners
-    f32 left   =  -10.0f;
-    f32 right  =   10.0f;
-    f32 bottom =   -5.0f;
-    f32 top    =    5.0f;
-    f32 far    =   10.0f;
-    f32 near   =  -10.0f;
+    f32 left   =  -1.0f;
+    f32 right  =   1.0f;
+    f32 bottom =  -1.0f;
+    f32 top    =   1.0f;
+    f32 far    =   1.0f;
+    f32 near   =  -1.0f;
 
     /*
           P8 ---- P7
@@ -135,35 +151,35 @@ void Load( Application* application )
         P1 ---- P2
      */
 
-    v3 P1 = { left,  bottom, near }; // (-10,  0,  0)
-    v3 P2 = { right, bottom, near }; // ( 10,  0,  0)
-    v3 P3 = { right, top,    near }; // ( 10, 10,  0)
-    v3 P4 = { left,  top,    near }; // (-10, 10,  0)
+    v3 P1 = { left,  bottom, near }; // (-1, 0, 0)
+    v3 P2 = { right, bottom, near }; // ( 1, 0, 0)
+    v3 P3 = { right, top,    near }; // ( 1, 1, 0)
+    v3 P4 = { left,  top,    near }; // (-1, 1, 0)
 
-    v3 P5 = { left,  bottom, far };  // (-10,  0, 10)
-    v3 P6 = { right, bottom, far };  // ( 10,  0, 10)
-    v3 P7 = { right, top,    far };  // ( 10, 10, 10)
-    v3 P8 = { left,  top,    far };  // (-10, 10, 10)
+    v3 P5 = { left,  bottom, far };  // (-1, 0, 1)
+    v3 P6 = { right, bottom, far };  // ( 1, 0, 1)
+    v3 P7 = { right, top,    far };  // ( 1, 1, 1)
+    v3 P8 = { left,  top,    far };  // (-1, 1, 1)
 
-    application->m_cornellBox.m_vertices[0].m_position = P1;
-    application->m_cornellBox.m_vertices[1].m_position = P2;
-    application->m_cornellBox.m_vertices[2].m_position = P3;
-    application->m_cornellBox.m_vertices[3].m_position = P4;
-    application->m_cornellBox.m_vertices[4].m_position = P5;
-    application->m_cornellBox.m_vertices[5].m_position = P6;
-    application->m_cornellBox.m_vertices[6].m_position = P7;
-    application->m_cornellBox.m_vertices[7].m_position = P8;
+    box->m_vertices[0].m_position = P1;
+    box->m_vertices[1].m_position = P2;
+    box->m_vertices[2].m_position = P3;
+    box->m_vertices[3].m_position = P4;
+    box->m_vertices[4].m_position = P5;
+    box->m_vertices[5].m_position = P6;
+    box->m_vertices[6].m_position = P7;
+    box->m_vertices[7].m_position = P8;
 
     // construct the list of indices
     u32 indices[30] = { 
-        4, 5, 6, 6, 7, 4, // back
+        4, 5, 6, 6, 7, 4, // front
         0, 1, 5, 5, 4, 0, // bottom
         5, 1, 2, 2, 6, 5, // right
         0, 4, 7, 7, 3, 0, // left
         7, 6, 2, 2, 3, 7  // top
     };
 
-    memcpy( application->m_cornellBox.m_indices, &indices, sizeof( u32 ) * 30 );
+    memcpy( box->m_indices, &indices, sizeof( u32 ) * 30 );
 
     application->m_permanentPool = CreateMemoryPool( MEGABYTES(10) );
     application->m_transientPool = CreateMemoryPool( MEGABYTES(10) );
@@ -185,8 +201,12 @@ void Update( Application* application )
 {
     ClearMemoryPool( application->m_transientPool );
 
-    Camera* camera = &application->m_camera;
+    Box* box           = &application->m_cornellBox;
+    box->m_scaleMatrix = CreateScaleMatrix( box->m_width  * 0.5f,
+                                            box->m_height * 0.5f,
+                                            box->m_length * 0.5f);
 
+    Camera* camera                = &application->m_camera;
     camera->m_rotationQuarternion = cameraRotationQuarternion( camera->m_roll, camera->m_pitch, camera->m_yaw );
     camera->m_inverseRotation     = toInverse( camera->m_rotationQuarternion );
 
@@ -199,8 +219,8 @@ void Update( Application* application )
     camera->m_direction = { p2.m_q1, p2.m_q2, p2.m_q3 };
     
     m4 projectionMatrix = CreateProjectionMatrix( camera->m_near, camera->m_far, camera->m_screenWidth, camera->m_screenHeight, camera->m_fov );
-    m4 viewTransform    = CreateViewTransform( camera->m_position );
-    application->m_platform->setCameraData( application->m_renderer, projectionMatrix, viewTransform, camera->m_rotationQuarternion, camera->m_inverseRotation );
+    m4 viewTransform    = CreateTransformMatrix( camera->m_position );
+    application->m_platform->setCameraData( application->m_renderer, projectionMatrix, viewTransform, box->m_scaleMatrix, camera->m_rotationQuarternion, camera->m_inverseRotation );
 }
 
 void Render( Application* application )

@@ -165,12 +165,13 @@ void SubmitDrawCall( void* renderer, DrawCall* call )
     metalRenderer->m_numIndices  = call->m_numIndices;
 }
 
-void SetCameraData( void* renderer, m4 projectionMatrix, m4 viewTransform, struct Quarternion rotation, struct Quarternion inverse )
+void SetCameraData( void* renderer, m4 projectionMatrix, m4 viewTransform, m4 scaleTransform, struct Quarternion rotation, struct Quarternion inverse )
 {
     MetalRenderer* metalRenderer = (MetalRenderer*)renderer;
 
     metalRenderer->m_uniform.m_projectionMatrix    = projectionMatrix;
     metalRenderer->m_uniform.m_viewTransform       = viewTransform;
+    metalRenderer->m_uniform.m_scaleTransform      = scaleTransform;
     metalRenderer->m_uniform.m_rotationQuarternion = rotation;
     metalRenderer->m_uniform.m_inverseRotation     = inverse;
 
