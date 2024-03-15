@@ -1,13 +1,16 @@
+![](res/demo.png)
+
 ## Cornellbox inspired by Robert Hodgin
 This project rebuilds the base of an art project originally created by Robert Hodgin https://roberthodgin.com
 
-Just search on YouTube for "Robert Hodgin Eyeo2012" to watch a full video showcasing his creation. The source code is available on GitHub https://github.com/flight404/Eyeo2012
+Just search on YouTube for **Robert Hodgin Eyeo2012** to watch a full video showcasing his creation. The source code is available on GitHub https://github.com/flight404/Eyeo2012
 
 ## Topics covered in this project
 - creating a window
 - integrating a user interface framework (ImGui)
 - hardware accelerated rendering with Metal
 - fake ambient occlusion shadows
+- matrix transformations (scale, move, rotate)
 - perspective projection
 - resizeable window
 - camera concept including rotation and movement
@@ -42,3 +45,8 @@ https://www.youtube.com/watch?v=EqNcqBdrNyI
 
 Immediate mode user interface:<br>
 https://github.com/ocornut/imgui
+
+## Font used
+
+The font I used to replace the standard ImGui font is **Blender Pro Book**<br>
+Fonts made from <a href="http://www.onlinewebfonts.com">Web Fonts</a> is licensed by CC BY 4.0

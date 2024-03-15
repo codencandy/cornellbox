@@ -5,6 +5,7 @@
 #include "CNC_Application.h"
 #include <imgui.h>
 
+void CustomizeUi();
 void ShowCornellboxUi( bool* showCornellbox, Application* application );
 
 #endif//CNC_USERINTERFACE_H

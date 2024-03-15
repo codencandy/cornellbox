@@ -35,27 +35,19 @@ int main()
     // IMGUI SETUP
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io.Fonts->AddFontFromFileTTF( "res/comfortaa.ttf", 14 );
-
-    // Setup Dear ImGui style
-    ImGui::StyleColorsLight();
-    ImGuiStyle& myStyle = ImGui::GetStyle();
-    myStyle.FrameRounding  = 3.0f;
-    myStyle.WindowRounding = 6.0f;
-    myStyle.WindowPadding  = ImVec2( 8.0f, 8.0f );
-    myStyle.FramePadding   = ImVec2( 8.0f, 8.0f );
-
+    
     // Setup Renderer backend
     ImGui_ImplMetal_Init(renderer->m_device);
     ImGui_ImplOSX_Init(renderer->m_view);
 
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.DisplaySize.x = renderer->m_view.bounds.size.width;
     io.DisplaySize.y = renderer->m_view.bounds.size.height;
 
     CGFloat framebufferScale = renderer->m_view.window.screen.backingScaleFactor ?: NSScreen.mainScreen.backingScaleFactor;
     io.DisplayFramebufferScale = ImVec2(framebufferScale, framebufferScale);
+
+    CustomizeUi();
 
     struct Platform macos = {0};
     macos.submitDrawCall  = SubmitDrawCall;
