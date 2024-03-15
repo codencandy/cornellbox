@@ -1,7 +1,7 @@
 ## Cornellbox inspired by Robert Hodgin
-This project rebuilds the base of an art project originally created by Robert Hodgin https://roberthodgin.com/
+This project rebuilds the base of an art project originally created by Robert Hodgin https://roberthodgin.com
 
-Just search on YouTube for "Robert Hodgin Eyeo2012" to watch a full video showcasing his creation.
+Just search on YouTube for "Robert Hodgin Eyeo2012" to watch a full video showcasing his creation. The source code is available on GitHub https://github.com/flight404/Eyeo2012
 
 ## Topics covered in this project
 - creating a window
