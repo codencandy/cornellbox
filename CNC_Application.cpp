@@ -37,10 +37,8 @@ Quarternion multiply( Quarternion& a, Quarternion& b )
     return result;
 }
 
-Quarternion cameraRotationQuarternion( f32 roll, f32 pitch, f32 yaw )
+Quarternion cameraRotationQuarternion( Quarternion q, f32 roll, f32 pitch, f32 yaw )
 {
-    Quarternion q = {};
-
     f32 r = pitch  * 0.5f;
     f32 p = yaw    * 0.5f;
     f32 y = roll   * 0.5f;
@@ -206,13 +204,14 @@ void Update( Application* application )
                                             box->m_height * 0.5f,
                                             box->m_length * 0.5f);
 
-    Camera* camera                = &application->m_camera;
-    camera->m_rotationQuarternion = cameraRotationQuarternion( camera->m_roll, camera->m_pitch, camera->m_yaw );
+    Camera*     camera = &application->m_camera;
+    v3          dir    = camera->m_direction;
+    Quarternion p      = toQuarterion( 0.0f, dir[0], dir[1], dir[2] );
+    
+    camera->m_rotationQuarternion = cameraRotationQuarternion( p, camera->m_roll, camera->m_pitch, camera->m_yaw );
     camera->m_inverseRotation     = toInverse( camera->m_rotationQuarternion );
 
     // update the camera direction 
-    v3 dir = camera->m_direction;
-    Quarternion p  = toQuarterion( 0.0f, dir[0], dir[1], dir[2] );
     Quarternion p1 = multiply( camera->m_inverseRotation, p );
     Quarternion p2 = multiply( p1, camera->m_rotationQuarternion );
     
