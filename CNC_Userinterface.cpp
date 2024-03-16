@@ -42,7 +42,7 @@ void CustomizeUi()
     colors[ImGuiCol_BorderShadow]           = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
     colors[ImGuiCol_FrameBg]                = ImVec4(0.09f, 0.10f, 0.11f, 0.54f);
     colors[ImGuiCol_FrameBgHovered]         = ImVec4(0.17f, 0.18f, 0.20f, 0.40f);
-    colors[ImGuiCol_FrameBgActive]          = ImVec4(0.08f, 0.47f, 0.54f, 0.67f);
+    colors[ImGuiCol_FrameBgActive]          = ImVec4(0.45f, 0.45f, 0.45f, 0.67f);
     colors[ImGuiCol_TitleBg]                = ImVec4(0.04f, 0.04f, 0.04f, 1.00f);
     colors[ImGuiCol_TitleBgActive]          = ImVec4(0.09f, 0.10f, 0.11f, 1.00f);
     colors[ImGuiCol_TitleBgCollapsed]       = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
@@ -52,8 +52,8 @@ void CustomizeUi()
     colors[ImGuiCol_ScrollbarGrabHovered]   = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
     colors[ImGuiCol_ScrollbarGrabActive]    = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
     colors[ImGuiCol_CheckMark]              = ImVec4(0.23f, 0.82f, 0.72f, 1.00f);
-    colors[ImGuiCol_SliderGrab]             = ImVec4(0.24f, 0.88f, 0.66f, 1.00f);
-    colors[ImGuiCol_SliderGrabActive]       = ImVec4(0.39f, 0.81f, 0.64f, 1.00f);
+    colors[ImGuiCol_SliderGrab]             = ImVec4(0.88f, 0.77f, 0.24f, 1.00f);
+    colors[ImGuiCol_SliderGrabActive]       = ImVec4(0.88f, 0.77f, 0.24f, 1.00f);
     colors[ImGuiCol_Button]                 = ImVec4(0.08f, 0.09f, 0.08f, 0.40f);
     colors[ImGuiCol_ButtonHovered]          = ImVec4(0.49f, 0.49f, 0.49f, 1.00f);
     colors[ImGuiCol_ButtonActive]           = ImVec4(0.27f, 0.28f, 0.30f, 1.00f);
@@ -105,23 +105,23 @@ void ShowCornellboxUi( bool* showCornellbox, Application* application )
 
     ImGui::SeparatorText("CAMERA");
     ImGui::Spacing();
-    ImGui::DragFloat( "FOV",       &camera->m_fov,  0.5f,  20.0f,  120.0f, "%.3f" );
-    ImGui::DragFloat( "ROLL",      &roll,           0.5f, -90.0f,   90.0f, "%.3f" );
-    ImGui::DragFloat( "PITCH",     &pitch,          0.5f, -90.0f,   90.0f, "%.3f" );
-    ImGui::DragFloat( "YAW",       &yaw,            0.5f, -90.0f,   90.0f, "%.3f" );
+    ImGui::DragFloat( "FOV",      &camera->m_fov, 0.5f,  20.0f,  120.0f );
+    ImGui::DragFloat( "ROLL",     &roll,          0.5f, -90.0f,   90.0f );
+    ImGui::DragFloat( "PITCH",    &pitch,         0.5f, -90.0f,   90.0f );
+    ImGui::DragFloat( "YAW",      &yaw,           0.5f, -90.0f,   90.0f );
 
     ImGui::SeparatorText("BOX");
     ImGui::Spacing();
-    ImGui::DragFloat( "WIDTH",     &box->m_width,   0.5f,  1.0f,   20.0f, "%.3f" );
-    ImGui::DragFloat( "HEIGHT",    &box->m_height,  0.5f,  1.0f,   20.0f, "%.3f" );
-    ImGui::DragFloat( "LENGTH",    &box->m_length,  0.5f,  1.0f,   20.0f, "%.3f" );
+    ImGui::SliderFloat( "WIDTH",  &box->m_width,  1.0f,   20.0f );
+    ImGui::SliderFloat( "HEIGHT", &box->m_height, 1.0f,   20.0f );
+    ImGui::SliderFloat( "LENGTH", &box->m_length, 1.0f,   20.0f );
 
     camera->m_roll  = toRadians( roll );
     camera->m_pitch = toRadians( pitch );
     camera->m_yaw   = toRadians( yaw );
     camera->m_position[2] = posZ;
 
-    if( ImGui::Button( "reload shader" ) )
+    if( ImGui::Button( "RELOAD SHADER" ) )
     {
         Platform* platform = application->m_platform;
         platform->reloadShaders( application->m_renderer );
