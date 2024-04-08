@@ -42,6 +42,8 @@ Then run ```sh build.sh ALL``` once to get ImGui to build into an object file. E
 In order to run execute <br>
 ```./cornellbox```
 
+In case you close the user interface *F1* brings it back.
+
 ## Further links
 
 Paper explaining quarternions:
